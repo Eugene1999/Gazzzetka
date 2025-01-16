@@ -1,22 +1,66 @@
 version: '3.8'
+
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-    environment:
-      - DJANGO_SETTINGS_MODULE=project.settings
     env_file:
       - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
   db:
-    image: postgres:latest
+    image: postgres:14
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: yourdb
+    env_file:
+      - .env
+
+  redis:
+    image: redis:latest
+    restart: always
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A project worker --loglevel=info
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A project beat --loglevel=info
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  flower:
+    image: mher/flower
+    restart: always
+    ports:
+      - "5555:5555"
+    command: ["flower", "--broker=redis://redis:6379/0"]
+    depends_on:
+      - redis
+
 volumes:
   postgres_data:

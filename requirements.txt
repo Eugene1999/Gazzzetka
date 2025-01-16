@@ -1,0 +1,31 @@
+# Django core
+Django==5.1.5
+djangorestframework
+psycopg2-binary
+gunicorn
+
+# Celery
+celery[redis]
+django-celery-beat
+django-celery-results
+
+# Testing and development
+pytest
+pytest-django
+pytest-cov
+factory-boy
+coverage
+black
+isort
+flake8
+
+# Additional tools
+django-environ
+drf-yasg
+django-debug-toolbar
+
+# Frontend integration
+django-webpack-loader
+
+# Security
+django-axes
