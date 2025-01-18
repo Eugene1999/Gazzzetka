@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -8,7 +10,6 @@ class User(AbstractUser):
 
 
 class ThemeColor(models.Model):
-    unique_id = models.UUIDField(primary_key=True, editable=False, default=models.UUIDField.default)
     name = models.CharField(max_length=100, db_index=True)
     primary = models.CharField(max_length=7)
     secondary = models.CharField(max_length=7)
@@ -20,7 +21,6 @@ class ThemeColor(models.Model):
 
 
 class Channel(models.Model):
-    unique_id = models.UUIDField(primary_key=True, editable=False, default=models.UUIDField.default)
     theme_color = models.ForeignKey(ThemeColor, on_delete=models.SET_NULL, null=True, related_name='channels')
     title = models.CharField(max_length=255, db_index=True)
     description = models.TextField()
@@ -32,7 +32,6 @@ class Channel(models.Model):
 
 
 class Article(models.Model):
-    unique_id = models.UUIDField(primary_key=True, editable=False, default=models.UUIDField.default)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='articles')
     source_url = models.URLField()
@@ -55,7 +54,6 @@ class Article(models.Model):
 
 
 class ArticleImage(models.Model):
-    unique_id = models.UUIDField(primary_key=True, editable=False, default=models.UUIDField.default)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='article_images/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -65,7 +63,6 @@ class ArticleImage(models.Model):
 
 
 class ArticleRelease(models.Model):
-    unique_id = models.UUIDField(primary_key=True, editable=False, default=models.UUIDField.default)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='releases')
     is_active = models.BooleanField(default=False)
     is_released = models.BooleanField(default=False)
