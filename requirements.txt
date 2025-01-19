@@ -23,6 +23,7 @@ flake8
 django-environ
 drf-yasg
 django-debug-toolbar
+pillow
 
 # Frontend integration
 django-webpack-loader

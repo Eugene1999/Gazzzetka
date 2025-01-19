@@ -2,7 +2,10 @@ createsuperuser:
 	docker exec -it -e python gazzzetka ./DjangoGazzzetka/manage.py createsuperuser
 
 migrate:
-	python3 ./DjangoGazzzetka/manage.py migrate
+	docker compose exec web python DjangoGazzzetka/manage.py migrate
 
-migrations:
+makemigrations:
 	python3 DjangoGazzzetka/manage.py makemigrations
+
+build:
+	docker compose up --build -d
